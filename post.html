@@ -207,19 +207,8 @@
     }
 
     @media (max-width: 640px) {
-      .nav-toggle { display: flex; }
-      .nav-inner { justify-content: center; }
-      .nav-links {
-        display: none; position: fixed; inset: 52px 0 0 0;
-        background: var(--cream); flex-direction: column;
-        align-items: center; justify-content: center;
-      }
-      .nav-links.open { display: flex; }
-      .nav-divider { display: none; }
-      .nav-links li a {
-        font-size: 18px; padding: 18px 48px;
-        height: auto; line-height: 1.4; width: 100%; text-align: center;
-      }
+      .nav-toggle { display: none; }
+      .nav-links li a { padding: 0 16px; font-size: 13px; }
     }
   </style>
 </head>
