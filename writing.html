@@ -40,251 +40,108 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── NAV ── */
     .site-nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: sticky; top: 0; z-index: 100;
       background: var(--cream);
       border-bottom: 1px solid rgba(46,42,82,0.1);
     }
     .nav-inner {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: 0 var(--pad);
-      height: 52px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      max-width: var(--max-w); margin: 0 auto;
+      padding: 0 var(--pad); height: 52px;
+      display: flex; align-items: center; justify-content: center;
     }
-    .nav-links {
-      display: flex;
-      list-style: none;
-      align-items: center;
-    }
-    .nav-divider {
-      width: 1px;
-      height: 16px;
-      background: rgba(46,42,82,0.18);
-      flex-shrink: 0;
-    }
+    .nav-links { display: flex; list-style: none; align-items: center; }
+    .nav-divider { width: 1px; height: 16px; background: rgba(46,42,82,0.18); flex-shrink: 0; }
     .nav-links li a {
-      display: block;
-      font-family: var(--ff-body);
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--stone);
-      text-decoration: none;
-      padding: 0 28px;
-      height: 52px;
-      line-height: 52px;
-      transition: color 0.2s;
+      display: block; font-family: var(--ff-body); font-size: 14px;
+      font-weight: 400; color: var(--stone); text-decoration: none;
+      padding: 0 28px; height: 52px; line-height: 52px; transition: color 0.2s;
     }
     .nav-links li a:hover,
-    .nav-links li a.active { color: var(--dusty-violet); background: none; }
+    .nav-links li a.active { color: var(--dusty-violet); }
 
-    .nav-toggle {
-      display: none;
-      position: absolute;
-      right: var(--pad);
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 8px;
-    }
-    .nav-toggle span {
-      display: block; width: 20px; height: 2px;
-      background: var(--deep-violet); border-radius: 2px;
-      transition: transform .3s, opacity .3s;
-    }
-    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .nav-toggle.open span:nth-child(2) { opacity: 0; }
-    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-    /* ── PAGE HEADER ── */
     .page-header {
-      max-width: var(--max-w);
-      margin: 0 auto;
+      max-width: var(--max-w); margin: 0 auto;
       padding: clamp(48px,7vw,72px) var(--pad) clamp(24px,4vw,36px);
     }
     .page-title {
-      font-family: var(--ff-caveat);
-      font-size: clamp(48px,7vw,72px);
-      font-weight: 700;
-      color: var(--deep-violet);
-      line-height: 1;
+      font-family: var(--ff-caveat); font-size: clamp(48px,7vw,72px);
+      font-weight: 700; color: var(--deep-violet); line-height: 1;
     }
 
-    /* ── FILTER TAGS ── */
     .filter-wrap {
-      max-width: var(--max-w);
-      margin: 0 auto;
+      max-width: var(--max-w); margin: 0 auto;
       padding: 0 var(--pad) clamp(24px,4vw,40px);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+      display: flex; flex-wrap: wrap; gap: 8px;
     }
     .tag-btn {
-      font-family: var(--ff-body);
-      font-size: 12px;
-      font-weight: 400;
-      color: var(--stone);
-      background: transparent;
-      border: 1px solid rgba(46,42,82,0.2);
-      border-radius: 100px;
-      padding: 5px 14px;
-      cursor: pointer;
-      transition: all 0.2s;
+      font-family: var(--ff-body); font-size: 12px; font-weight: 400;
+      color: var(--stone); background: transparent;
+      border: 1px solid rgba(46,42,82,0.2); border-radius: 100px;
+      padding: 5px 14px; cursor: pointer; transition: all 0.2s;
     }
     .tag-btn:hover { border-color: var(--dusty-violet); color: var(--dusty-violet); }
-    .tag-btn.active {
-      background: var(--deep-violet);
-      border-color: var(--deep-violet);
-      color: var(--cream);
-    }
-    .tag-btn.top-btn.active {
-      background: var(--dusty-violet);
-      border-color: var(--dusty-violet);
-      color: var(--cream);
-    }
+    .tag-btn.active { background: var(--deep-violet); border-color: var(--deep-violet); color: var(--cream); }
+    .tag-btn.top-btn.active { background: var(--dusty-violet); border-color: var(--dusty-violet); color: var(--cream); }
 
-    /* ── POSTS LIST ── */
     .posts-wrap {
-      max-width: var(--max-w);
-      margin: 0 auto;
+      max-width: var(--max-w); margin: 0 auto;
       padding: 0 var(--pad) clamp(64px,10vw,100px);
     }
+    .state-msg { font-size: 14px; color: var(--mist-gray); padding: 40px 0; }
 
-    /* loading / error */
-    .state-msg {
-      font-size: 14px;
-      color: var(--mist-gray);
-      padding: 40px 0;
-    }
-
-    .post-row {
-      padding: 20px 0;
-      border-bottom: 1px solid rgba(46,42,82,0.08);
-    }
+    .post-row { padding: 20px 0; border-bottom: 1px solid rgba(46,42,82,0.08); }
     .post-row:first-child { border-top: 1px solid rgba(46,42,82,0.08); }
-
-    .post-date {
-      font-size: 12px;
-      color: var(--mist-gray);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+    .post-date { font-size: 12px; color: var(--mist-gray); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
     .post-title-link {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      text-decoration: none;
-      margin-bottom: 8px;
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 16px;
+      text-decoration: none; margin-bottom: 8px;
     }
     .post-title-text {
-      font-family: var(--ff-body);
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--deep-violet);
-      line-height: 1.5;
-      transition: color 0.2s;
+      font-family: var(--ff-body); font-size: 15px; font-weight: 500;
+      color: var(--deep-violet); line-height: 1.5; transition: color 0.2s;
     }
     .post-title-link:hover .post-title-text { color: var(--dusty-violet); }
     .post-arrow {
-      color: var(--mist-gray);
-      font-size: 18px;
-      flex-shrink: 0;
-      margin-top: 1px;
-      transition: transform 0.2s, color 0.2s;
+      color: var(--mist-gray); font-size: 18px; flex-shrink: 0;
+      margin-top: 1px; transition: transform 0.2s, color 0.2s;
     }
-    .post-title-link:hover .post-arrow {
-      transform: translate(3px, -3px);
-      color: var(--dusty-violet);
-    }
+    .post-title-link:hover .post-arrow { transform: translate(3px,-3px); color: var(--dusty-violet); }
     .post-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: var(--mist-gray);
+      display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--mist-gray);
     }
     .post-actions a, .post-actions button {
-      font-family: var(--ff-body);
-      font-size: 13px;
-      color: var(--mist-gray);
-      text-decoration: none;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      transition: color 0.2s;
+      font-family: var(--ff-body); font-size: 13px; color: var(--mist-gray);
+      text-decoration: none; background: none; border: none;
+      cursor: pointer; padding: 0; transition: color 0.2s;
     }
     .post-actions a:hover, .post-actions button:hover { color: var(--dusty-violet); }
     .post-actions .pipe { color: rgba(46,42,82,0.2); }
-    .copy-confirm {
-      font-size: 11px;
-      color: var(--dusty-violet);
-      display: none;
-    }
-    .post-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 8px;
-    }
+    .copy-confirm { font-size: 11px; color: var(--dusty-violet); display: none; }
+    .post-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
     .post-tag-pill {
-      font-size: 11px;
-      color: var(--dusty-violet);
-      background: var(--lilac-mist);
-      border-radius: 100px;
-      padding: 2px 10px;
+      font-size: 11px; color: var(--dusty-violet);
+      background: var(--lilac-mist); border-radius: 100px; padding: 2px 10px;
     }
 
-    /* ── FOOTER ── */
-    .site-footer {
-      background: var(--deep-violet);
-      padding: 40px var(--pad);
-    }
+    .site-footer { background: var(--deep-violet); padding: 40px var(--pad); }
     .footer-inner {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
+      max-width: var(--max-w); margin: 0 auto;
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
     .footer-name {
-      font-family: var(--ff-caveat);
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--cream);
-      text-decoration: none;
+      font-family: var(--ff-caveat); font-size: 24px;
+      font-weight: 700; color: var(--cream); text-decoration: none;
     }
     .footer-links { display: flex; gap: 24px; list-style: none; }
-    .footer-links a {
-      font-size: 13px;
-      color: rgba(250,249,245,0.5);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
+    .footer-links a { font-size: 13px; color: rgba(250,249,245,0.5); text-decoration: none; transition: color 0.2s; }
     .footer-links a:hover { color: var(--cream); }
     .footer-copy {
-      width: 100%;
-      padding-top: 20px;
-      margin-top: 8px;
+      width: 100%; padding-top: 20px; margin-top: 8px;
       border-top: 1px solid rgba(250,249,245,0.1);
-      font-size: 12px;
-      color: rgba(250,249,245,0.3);
-    }
-
-    @media (max-width: 640px) {
-      .nav-toggle { display: none; }
-      .nav-links li a { padding: 0 16px; font-size: 13px; }
+      font-size: 12px; color: rgba(250,249,245,0.3);
     }
   </style>
 </head>
@@ -292,9 +149,6 @@
 
 <nav class="site-nav">
   <div class="nav-inner">
-    <button class="nav-toggle" id="navToggle" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
     <ul class="nav-links" id="navLinks">
       <li><a href="index.html">Home</a></li>
       <span class="nav-divider" aria-hidden="true"></span>
@@ -312,7 +166,6 @@
 <div class="filter-wrap" id="filterWrap">
   <button class="tag-btn top-btn" data-tag="Top">Top</button>
   <button class="tag-btn active" data-tag="All">All</button>
-  <!-- more tags injected by JS -->
 </div>
 
 <div class="posts-wrap">
@@ -328,29 +181,25 @@
       <li><a href="writing.html">Writing</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
-    <div class="footer-copy">© 2026 Arpit Purohit </div>
+    <div class="footer-copy">© 2026 Arpit Purohit</div>
   </div>
 </footer>
 
 <script>
-const SHEETDB_URL = 'https://sheetdb.io/api/v1/2zv0lhq8khga7';
-const stateMsg   = document.getElementById('stateMsg');
-const postsList  = document.getElementById('postsList');
-const filterWrap = document.getElementById('filterWrap');
-
+const POSTS_URL = 'posts.json';
 let allPosts = [];
 let activeTags = new Set(['All']);
 
 async function fetchPosts() {
   try {
-    const res  = await fetch(SHEETDB_URL);
+    const res  = await fetch(POSTS_URL);
     const data = await res.json();
     allPosts = data;
     buildTagFilters(data);
     renderPosts(data);
-    stateMsg.style.display = 'none';
+    document.getElementById('stateMsg').style.display = 'none';
   } catch(e) {
-    stateMsg.textContent = 'Could not load posts. Please try again later.';
+    document.getElementById('stateMsg').textContent = 'Could not load posts. Please try again later.';
   }
 }
 
@@ -359,36 +208,32 @@ function buildTagFilters(posts) {
   posts.forEach(p => {
     if (p.Tags) p.Tags.split(',').forEach(t => tagSet.add(t.trim()));
   });
+  const wrap = document.getElementById('filterWrap');
   tagSet.forEach(tag => {
     if (!document.querySelector(`[data-tag="${tag}"]`)) {
       const btn = document.createElement('button');
       btn.className = 'tag-btn';
       btn.dataset.tag = tag;
       btn.textContent = tag;
-      filterWrap.appendChild(btn);
+      wrap.appendChild(btn);
     }
   });
-  filterWrap.querySelectorAll('.tag-btn').forEach(btn => {
+  wrap.querySelectorAll('.tag-btn').forEach(btn => {
     btn.addEventListener('click', () => toggleTag(btn.dataset.tag));
   });
 }
 
 function toggleTag(tag) {
   if (tag === 'All') {
-    activeTags.clear();
-    activeTags.add('All');
+    activeTags.clear(); activeTags.add('All');
   } else if (tag === 'Top') {
-    // Top is exclusive toggle
     if (activeTags.has('Top') && activeTags.size === 1) {
-      activeTags.clear();
-      activeTags.add('All');
+      activeTags.clear(); activeTags.add('All');
     } else {
-      activeTags.clear();
-      activeTags.add('Top');
+      activeTags.clear(); activeTags.add('Top');
     }
   } else {
-    activeTags.delete('All');
-    activeTags.delete('Top');
+    activeTags.delete('All'); activeTags.delete('Top');
     if (activeTags.has(tag)) {
       activeTags.delete(tag);
       if (activeTags.size === 0) activeTags.add('All');
@@ -396,8 +241,7 @@ function toggleTag(tag) {
       activeTags.add(tag);
     }
   }
-  // update button states
-  filterWrap.querySelectorAll('.tag-btn').forEach(btn => {
+  document.querySelectorAll('.tag-btn').forEach(btn => {
     btn.classList.toggle('active', activeTags.has(btn.dataset.tag));
   });
   renderPosts(allPosts);
@@ -405,7 +249,6 @@ function toggleTag(tag) {
 
 function renderPosts(posts) {
   let filtered = posts;
-
   if (activeTags.has('Top')) {
     filtered = posts.filter(p => (p['Is it a "Top" post?'] || '').toLowerCase() === 'yes');
   } else if (!activeTags.has('All')) {
@@ -415,25 +258,24 @@ function renderPosts(posts) {
       return [...activeTags].every(t => postTags.includes(t));
     });
   }
-
+  const list = document.getElementById('postsList');
   if (filtered.length === 0) {
-    postsList.innerHTML = '<p class="state-msg">No posts found for the selected filters.</p>';
+    list.innerHTML = '<p class="state-msg">No posts found for the selected filters.</p>';
     return;
   }
-
-  postsList.innerHTML = filtered.map((p, i) => {
+  list.innerHTML = filtered.map((p, i) => {
     const slug = slugify(p['Post Title'] || '', i);
     const tags = p.Tags ? p.Tags.split(',').map(t => t.trim()) : [];
     const tagPills = tags.map(t => `<span class="post-tag-pill">${t}</span>`).join('');
     return `
       <div class="post-row">
         <div class="post-date">${p.Date || ''}</div>
-        <a class="post-title-link" href="post.html?id=${encodeURIComponent(slug)}" data-index="${i}">
+        <a class="post-title-link" href="post.html?id=${encodeURIComponent(slug)}">
           <span class="post-title-text">${p['Post Title'] || ''}</span>
           <span class="post-arrow">&#8599;</span>
         </a>
         <div class="post-actions">
-          <button onclick="copyLink('${slug}')" id="copy-${slug}">Copy Link</button>
+          <button onclick="copyLink('${slug}')">Copy Link</button>
           <span class="pipe">|</span>
           <a href="${p['LinkedIn URL'] || '#'}" target="_blank" rel="noopener">Read on LinkedIn</a>
           <span class="copy-confirm" id="confirm-${slug}">Copied!</span>
@@ -441,8 +283,6 @@ function renderPosts(posts) {
         ${tagPills ? `<div class="post-tags">${tagPills}</div>` : ''}
       </div>`;
   }).join('');
-
-  // store posts in sessionStorage so post.html can read them
   sessionStorage.setItem('ap_posts', JSON.stringify(allPosts));
 }
 
@@ -451,24 +291,12 @@ function slugify(title, index) {
 }
 
 function copyLink(slug) {
-  const url = window.location.origin + window.location.pathname.replace('writing.html','') + 'post.html?id=' + encodeURIComponent(slug);
+  const url = window.location.origin + '/post.html?id=' + encodeURIComponent(slug);
   navigator.clipboard.writeText(url).then(() => {
     const el = document.getElementById('confirm-' + slug);
     if (el) { el.style.display = 'inline'; setTimeout(() => el.style.display = 'none', 2000); }
   });
 }
-
-// nav toggle
-document.getElementById('navToggle').addEventListener('click', function() {
-  this.classList.toggle('open');
-  document.getElementById('navLinks').classList.toggle('open');
-});
-document.querySelectorAll('.nav-links a').forEach(a => {
-  a.addEventListener('click', () => {
-    document.getElementById('navToggle').classList.remove('open');
-    document.getElementById('navLinks').classList.remove('open');
-  });
-});
 
 fetchPosts();
 </script>

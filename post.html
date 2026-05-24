@@ -14,9 +14,7 @@
       font-weight: 700;
       font-style: normal;
     }
-
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
       --deep-violet:  #2E2A52;
       --dusty-violet: #8175DB;
@@ -29,27 +27,19 @@
       --max-w:        680px;
       --pad:          clamp(20px, 5vw, 48px);
     }
-
     html { scroll-behavior: smooth; }
     body {
-      background: var(--cream);
-      color: var(--stone);
-      font-family: var(--ff-body);
-      font-size: 16px;
-      line-height: 1.75;
-      -webkit-font-smoothing: antialiased;
+      background: var(--cream); color: var(--stone);
+      font-family: var(--ff-body); font-size: 16px;
+      line-height: 1.75; -webkit-font-smoothing: antialiased;
     }
-
-    /* ── NAV ── */
     .site-nav {
       position: sticky; top: 0; z-index: 100;
-      background: var(--cream);
-      border-bottom: 1px solid rgba(46,42,82,0.1);
+      background: var(--cream); border-bottom: 1px solid rgba(46,42,82,0.1);
     }
     .nav-inner {
-      max-width: 760px; margin: 0 auto;
-      padding: 0 var(--pad); height: 52px;
-      display: flex; align-items: center; justify-content: center;
+      max-width: 760px; margin: 0 auto; padding: 0 var(--pad);
+      height: 52px; display: flex; align-items: center; justify-content: center;
     }
     .nav-links { display: flex; list-style: none; align-items: center; }
     .nav-divider { width: 1px; height: 16px; background: rgba(46,42,82,0.18); flex-shrink: 0; }
@@ -60,166 +50,65 @@
     }
     .nav-links li a:hover { color: var(--dusty-violet); }
 
-    .nav-toggle {
-      display: none; position: absolute; right: var(--pad);
-      flex-direction: column; gap: 5px; cursor: pointer;
-      background: none; border: none; padding: 8px;
-    }
-    .nav-toggle span {
-      display: block; width: 20px; height: 2px;
-      background: var(--deep-violet); border-radius: 2px;
-      transition: transform .3s, opacity .3s;
-    }
-    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .nav-toggle.open span:nth-child(2) { opacity: 0; }
-    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-    /* ── BACK LINK ── */
-    .back-wrap {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: clamp(28px,4vw,40px) var(--pad) 0;
-    }
+    .back-wrap { max-width: var(--max-w); margin: 0 auto; padding: clamp(28px,4vw,40px) var(--pad) 0; }
     .back-link {
-      font-size: 13px;
-      color: var(--mist-gray);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: color 0.2s;
+      font-size: 13px; color: var(--mist-gray); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px; transition: color 0.2s;
     }
     .back-link:hover { color: var(--dusty-violet); }
 
-    /* ── POST ── */
     .post-wrap {
-      max-width: var(--max-w);
-      margin: 0 auto;
+      max-width: var(--max-w); margin: 0 auto;
       padding: clamp(24px,4vw,40px) var(--pad) clamp(64px,10vw,100px);
     }
-
-    .post-meta {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
-    .post-meta-date {
-      font-size: 12px;
-      color: var(--mist-gray);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .post-meta-tag {
-      font-size: 11px;
-      color: var(--dusty-violet);
-      background: var(--lilac-mist);
-      border-radius: 100px;
-      padding: 2px 10px;
-    }
-    .post-meta-top {
-      font-size: 11px;
-      color: var(--cream);
-      background: var(--dusty-violet);
-      border-radius: 100px;
-      padding: 2px 10px;
-    }
+    .post-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .post-meta-date { font-size: 12px; color: var(--mist-gray); text-transform: uppercase; letter-spacing: 0.5px; }
+    .post-meta-tag { font-size: 11px; color: var(--dusty-violet); background: var(--lilac-mist); border-radius: 100px; padding: 2px 10px; }
+    .post-meta-top { font-size: 11px; color: var(--cream); background: var(--dusty-violet); border-radius: 100px; padding: 2px 10px; }
 
     .post-heading {
-      font-family: var(--ff-body);
-      font-size: clamp(22px, 3.5vw, 30px);
-      font-weight: 600;
-      color: var(--deep-violet);
-      line-height: 1.3;
-      margin-bottom: 28px;
-      letter-spacing: -0.3px;
+      font-family: var(--ff-body); font-size: clamp(22px,3.5vw,30px);
+      font-weight: 600; color: var(--deep-violet);
+      line-height: 1.3; margin-bottom: 28px; letter-spacing: -0.3px;
     }
-
     .post-image {
-      width: 100%;
-      max-height: 340px;
-      object-fit: cover;
-      border-radius: 3px;
-      margin-bottom: 32px;
-      display: block;
+      width: 100%; max-height: 320px; object-fit: cover;
+      border-radius: 3px; margin-bottom: 32px; display: block;
     }
-
     .post-body {
-      font-size: clamp(15px,1.8vw,16px);
-      color: var(--stone);
-      line-height: 1.9;
-      white-space: pre-wrap;
+      font-size: clamp(15px,1.8vw,16px); color: var(--stone);
+      line-height: 1.9; white-space: pre-wrap;
     }
-
-    .post-divider {
-      border: none;
-      border-top: 1px solid rgba(46,42,82,0.09);
-      margin: 40px 0;
-    }
-
-    .post-actions {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+    .post-divider { border: none; border-top: 1px solid rgba(46,42,82,0.09); margin: 40px 0; }
+    .post-actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
     .post-actions a, .post-actions button {
-      font-family: var(--ff-body);
-      font-size: 13px;
-      color: var(--stone);
-      text-decoration: none;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
+      font-family: var(--ff-body); font-size: 13px; color: var(--stone);
+      text-decoration: none; background: none; border: none;
+      cursor: pointer; padding: 0;
       border-bottom: 1.5px solid var(--dusty-violet);
-      padding-bottom: 1px;
-      transition: color 0.2s;
+      padding-bottom: 1px; transition: color 0.2s;
     }
     .post-actions a:hover, .post-actions button:hover { color: var(--dusty-violet); }
     .copy-confirm { font-size: 12px; color: var(--dusty-violet); display: none; }
-
-    /* loading */
     .state-msg { font-size: 14px; color: var(--mist-gray); padding: 40px 0; }
 
-    /* ── FOOTER ── */
     .site-footer { background: var(--deep-violet); padding: 40px var(--pad); }
     .footer-inner {
-      max-width: 760px; margin: 0 auto;
-      display: flex; align-items: center;
-      justify-content: space-between; flex-wrap: wrap; gap: 16px;
+      max-width: 760px; margin: 0 auto; display: flex;
+      align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
-    .footer-name {
-      font-family: var(--ff-caveat); font-size: 24px;
-      font-weight: 700; color: var(--cream); text-decoration: none;
-    }
+    .footer-name { font-family: var(--ff-caveat); font-size: 24px; font-weight: 700; color: var(--cream); text-decoration: none; }
     .footer-links { display: flex; gap: 24px; list-style: none; }
-    .footer-links a {
-      font-size: 13px; color: rgba(250,249,245,0.5);
-      text-decoration: none; transition: color 0.2s;
-    }
+    .footer-links a { font-size: 13px; color: rgba(250,249,245,0.5); text-decoration: none; transition: color 0.2s; }
     .footer-links a:hover { color: var(--cream); }
-    .footer-copy {
-      width: 100%; padding-top: 20px; margin-top: 8px;
-      border-top: 1px solid rgba(250,249,245,0.1);
-      font-size: 12px; color: rgba(250,249,245,0.3);
-    }
-
-    @media (max-width: 640px) {
-      .nav-toggle { display: none; }
-      .nav-links li a { padding: 0 16px; font-size: 13px; }
-    }
+    .footer-copy { width: 100%; padding-top: 20px; margin-top: 8px; border-top: 1px solid rgba(250,249,245,0.1); font-size: 12px; color: rgba(250,249,245,0.3); }
   </style>
 </head>
 <body>
 
 <nav class="site-nav">
   <div class="nav-inner">
-    <button class="nav-toggle" id="navToggle" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-    <ul class="nav-links" id="navLinks">
+    <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <span class="nav-divider" aria-hidden="true"></span>
       <li><a href="writing.html">Writing</a></li>
@@ -257,17 +146,16 @@
       <li><a href="writing.html">Writing</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
-    <div class="footer-copy">© 2026 Arpit Purohit </div>
+    <div class="footer-copy">© 2026 Arpit Purohit</div>
   </div>
 </footer>
 
 <script>
-const SHEETDB_URL = 'https://sheetdb.io/api/v1/2zv0lhq8khga7';
+const POSTS_URL = 'posts.json';
 
 function slugify(title, index) {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + index;
 }
-
 function getParam(name) {
   return new URLSearchParams(window.location.search).get(name);
 }
@@ -276,34 +164,26 @@ async function loadPost() {
   const id = getParam('id');
   if (!id) { showError('No post specified.'); return; }
 
-  // try sessionStorage first (faster, no extra network call)
   let posts = null;
   const cached = sessionStorage.getItem('ap_posts');
-  if (cached) {
-    try { posts = JSON.parse(cached); } catch(e) {}
-  }
+  if (cached) { try { posts = JSON.parse(cached); } catch(e) {} }
 
   if (!posts) {
     try {
-      const res = await fetch(SHEETDB_URL);
+      const res = await fetch(POSTS_URL);
       posts = await res.json();
       sessionStorage.setItem('ap_posts', JSON.stringify(posts));
-    } catch(e) {
-      showError('Could not load post. Please try again.'); return;
-    }
+    } catch(e) { showError('Could not load post. Please try again.'); return; }
   }
 
   const post = posts.find((p, i) => slugify(p['Post Title'] || '', i) === id);
   if (!post) { showError('Post not found.'); return; }
 
-  // Update page title
   document.title = (post['Post Title'] || 'Post') + ' — Arpit Purohit';
 
-  // Meta
-  const metaEl = document.getElementById('postMeta');
   let metaHTML = '';
   if (post.Date) metaHTML += `<span class="post-meta-date">${post.Date}</span>`;
-  if (post['Is it a "Top" post?'] && post['Is it a "Top" post?'].toLowerCase() === 'yes') {
+  if ((post['Is it a "Top" post?'] || '').toLowerCase() === 'yes') {
     metaHTML += `<span class="post-meta-top">Top post</span>`;
   }
   if (post.Tags) {
@@ -311,12 +191,9 @@ async function loadPost() {
       metaHTML += `<span class="post-meta-tag">${t.trim()}</span>`;
     });
   }
-  metaEl.innerHTML = metaHTML;
-
-  // Title
+  document.getElementById('postMeta').innerHTML = metaHTML;
   document.getElementById('postTitle').textContent = post['Post Title'] || '';
 
-  // Image
   if (post['Image URL'] && post['Image URL'].trim()) {
     const img = document.getElementById('postImage');
     img.src = post['Image URL'].trim();
@@ -324,10 +201,7 @@ async function loadPost() {
     img.style.display = 'block';
   }
 
-  // Body
   document.getElementById('postBody').textContent = post.Body || '';
-
-  // LinkedIn link
   const liLink = document.getElementById('linkedinLink');
   if (post['LinkedIn URL']) liLink.href = post['LinkedIn URL'];
 
@@ -343,21 +217,7 @@ function copyLink() {
   });
 }
 
-function showError(msg) {
-  document.getElementById('stateMsg').textContent = msg;
-}
-
-// nav toggle
-document.getElementById('navToggle').addEventListener('click', function() {
-  this.classList.toggle('open');
-  document.getElementById('navLinks').classList.toggle('open');
-});
-document.querySelectorAll('.nav-links a').forEach(a => {
-  a.addEventListener('click', () => {
-    document.getElementById('navToggle').classList.remove('open');
-    document.getElementById('navLinks').classList.remove('open');
-  });
-});
+function showError(msg) { document.getElementById('stateMsg').textContent = msg; }
 
 loadPost();
 </script>
