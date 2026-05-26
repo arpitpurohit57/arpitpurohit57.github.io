@@ -257,7 +257,7 @@ function renderPosts(posts) {
     filtered = posts.filter(p => {
       if (!p.Tags) return false;
       const postTags = p.Tags.split(',').map(t => t.trim());
-      return [...activeTags].every(t => postTags.includes(t));
+      return [...activeTags].some(t => postTags.includes(t));
     });
   }
   const list = document.getElementById('postsList');
