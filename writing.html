@@ -194,6 +194,7 @@ async function fetchPosts() {
   try {
     const res  = await fetch(POSTS_URL);
     const data = await res.json();
+    // Sort by date descending (latest first)
     data.sort((a, b) => new Date(b.Date) - new Date(a.Date));
     allPosts = data;
     buildTagFilters(data);

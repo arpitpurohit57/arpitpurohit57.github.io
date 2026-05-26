@@ -308,8 +308,28 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 640px) {
-      .nav-toggle { display: none; }
-      .nav-links li a { padding: 0 16px; font-size: 13px; }
+      .nav-toggle { display: flex; }
+      .nav-inner { justify-content: center; }
+      .nav-links {
+        display: none;
+        position: fixed;
+        inset: 52px 0 0 0;
+        background: var(--cream);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+      }
+      .nav-links.open { display: flex; }
+      .nav-divider { display: none; }
+      .nav-links li a {
+        font-size: 18px;
+        padding: 18px 48px;
+        height: auto;
+        line-height: 1.4;
+        width: 100%;
+        text-align: center;
+      }
       .hero {
         grid-template-columns: 1fr;
         text-align: center;
@@ -359,8 +379,8 @@
 <!-- ABOUT -->
 <div class="about fu fu-4">
   <p>I am an engineer turned Product Manager turned Product Marketer who has spent 5+ years working with early and growth stage B2B SaaS startups.</p>
-  <p>Currently, I am building the product marketing practice at <a href="https://neontrumpet.com/" target="_blank" style="color:var(--deep-violet);border-bottom:1.5px solid var(--dusty-violet);text-decoration:none;padding-bottom:1px;">Neontrumpet</a> where I work with $1M to $5M B2B SaaS startups to build product marketing from scratch i.e. positioning strategy, website homepage, and sales enablement.</p>
-  <p>Before this, I built the product marketing function at Aavenir (a seed stage CLM Software) from the ground up. Prior to that, I was at Shipsy (Series B logistics SaaS &middot; Product Marketing Manager), Intugine (Pre-Series A logistics SaaS &middot; Product Manager), ICICI Lombard (Relationship Manager), and STL Tech (Project Engineer).</p>
+  <p>Currently, I am building the product marketing practice at Neontrumpet where I work with $1M to $5M B2B SaaS startups to build product marketing from scratch i.e. positioning strategy, website homepage, and sales enablement.</p>
+  <p>Before this, I built the product marketing function at Aavenir (a seed stage CLM Software) from the ground up. Prior to that, I was at Shipsy (Series B logistics SaaS &middot; Product Marketing Manager), Intugine (Series A logistics SaaS &middot; Product Manager), ICICI Lombard (Relationship Manager), and STL Tech (Project Engineer).</p>
   <p>The collective experience across these roles taught me that the best product doesn't always win but the best-understood one does.</p>
   <p>The best marketing is the one that helps people understand how their problem can be solved in a ridiculously simple manner. And it all starts from building stronger marketing foundations, any tactic downstream simply builds over it.</p>
   <p>I actively write about product positioning, GTM strategies, SaaS website homepages, and marketing in general. <a href="writing.html">Read how I think here.</a></p>
@@ -371,27 +391,10 @@
 
 <!-- RECENT WRITINGS -->
 <div class="recent">
-  <div class="recent-heading">Recent Writing</div>
+  <div class="recent-heading">Recent Writings</div>
   <ul class="recent-list" id="recentList">
-  <li class="recent-item" style="border:none;">
-    <span class="recent-title" style="color:var(--mist-gray);font-size:13px;">Loading...</span>
-  </li>
-</ul>
-        <span class="recent-title">&ldquo;Strategy&rdquo; is the most misunderstood term amongst SaaS founders.</span>
-        <span class="recent-date">May 21, 2026</span>
-      </a>
-    </li>
-    <li class="recent-item">
-      <a href="POST_URL_2" target="_blank">
-        <span class="recent-title">6 months ago, I moved from Bengaluru to Pune.</span>
-        <span class="recent-date">May 17, 2026</span>
-      </a>
-    </li>
-    <li class="recent-item">
-      <a href="POST_URL_3" target="_blank">
-        <span class="recent-title">I'm 32. Married. Left 9-5. Now self employed.</span>
-        <span class="recent-date">May 15, 2026</span>
-      </a>
+    <li class="recent-item" style="border:none;">
+      <span class="recent-title" style="color:var(--mist-gray);font-size:13px;">Loading...</span>
     </li>
   </ul>
   <a href="writing.html" class="view-all">View all &#8594;</a>
@@ -406,24 +409,29 @@
       <li><a href="writing.html">Writing</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
-    <div class="footer-copy">© 2026 Arpit Purohit </div>
+    <div class="footer-copy">© 2026 Arpit Purohit &middot; Craft over hype.</div>
   </div>
 </footer>
 
 <script>
+  // Nav toggle
   const toggle = document.getElementById('navToggle');
   const links  = document.getElementById('navLinks');
-  toggle.addEventListener('click', () => {
-    toggle.classList.toggle('open');
-    links.classList.toggle('open');
-  });
-  links.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      toggle.classList.remove('open');
-      links.classList.remove('open');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      toggle.classList.toggle('open');
+      links.classList.toggle('open');
     });
-  });
-function slugify(title, index) {
+    links.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        toggle.classList.remove('open');
+        links.classList.remove('open');
+      });
+    });
+  }
+
+  // Load 3 latest posts dynamically
+  function slugify(title, index) {
     return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + index;
   }
 
@@ -431,6 +439,7 @@ function slugify(title, index) {
     try {
       const res = await fetch('posts.json');
       const posts = await res.json();
+      // Sort by date descending
       posts.sort((a, b) => new Date(b.Date) - new Date(a.Date));
       const top3 = posts.slice(0, 3);
       const list = document.getElementById('recentList');
@@ -443,6 +452,7 @@ function slugify(title, index) {
           </a>
         </li>`;
       }).join('');
+      // Cache for post page
       sessionStorage.setItem('ap_posts', JSON.stringify(posts));
     } catch(e) {
       document.getElementById('recentList').innerHTML =

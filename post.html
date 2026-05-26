@@ -113,10 +113,8 @@
       background: none; cursor: pointer;
       border: 1.5px solid rgba(46,42,82,0.25);
       border-radius: 2px;
-      padding: 0;
+      padding: 8px 0;
       width: 160px;
-      height: 40px;
-      line-height: 40px;
       text-align: center;
       display: inline-block;
       transition: background 0.2s, color 0.2s, border-color 0.2s;
@@ -257,6 +255,7 @@ function showError(msg) {
 
 function buildPostNav(posts, currentIndex) {
   const nav = document.getElementById('postNav');
+  // newer post = lower index (prev), older post = higher index (next)
   const newerPost = currentIndex > 0 ? posts[currentIndex - 1] : null;
   const olderPost = currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null;
   let html = '';
@@ -281,6 +280,9 @@ function buildPostNav(posts, currentIndex) {
     html += '<div class="post-nav-spacer"></div>';
   }
 
+  nav.innerHTML = html;
+}
+
 async function loadPost() {
   const id = getParam('id');
   if (!id) { showError('No post specified.'); return; }
@@ -299,7 +301,10 @@ async function loadPost() {
       return;
     }
   }
+
+  // Sort by date descending (latest first) — must match writing page order
   posts.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+
   const currentIndex = posts.findIndex((p, i) => slugify(p['Post Title'] || '', i) === id);
   if (currentIndex === -1) { showError('Post not found.'); return; }
 
