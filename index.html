@@ -372,9 +372,11 @@
 <!-- RECENT WRITINGS -->
 <div class="recent">
   <div class="recent-heading">Recent Writing</div>
-  <ul class="recent-list">
-    <li class="recent-item">
-      <a href="POST_URL_1" target="_blank">
+  <ul class="recent-list" id="recentList">
+  <li class="recent-item" style="border:none;">
+    <span class="recent-title" style="color:var(--mist-gray);font-size:13px;">Loading...</span>
+  </li>
+</ul>
         <span class="recent-title">&ldquo;Strategy&rdquo; is the most misunderstood term amongst SaaS founders.</span>
         <span class="recent-date">May 21, 2026</span>
       </a>
@@ -421,6 +423,34 @@
       links.classList.remove('open');
     });
   });
+function slugify(title, index) {
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + index;
+  }
+
+  async function loadRecentPosts() {
+    try {
+      const res = await fetch('posts.json');
+      const posts = await res.json();
+      posts.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+      const top3 = posts.slice(0, 3);
+      const list = document.getElementById('recentList');
+      list.innerHTML = top3.map((p, i) => {
+        const slug = slugify(p['Post Title'] || '', i);
+        return `<li class="recent-item">
+          <a href="post.html?id=${encodeURIComponent(slug)}">
+            <span class="recent-title">${p['Post Title'] || ''}</span>
+            <span class="recent-date">${p.Date || ''}</span>
+          </a>
+        </li>`;
+      }).join('');
+      sessionStorage.setItem('ap_posts', JSON.stringify(posts));
+    } catch(e) {
+      document.getElementById('recentList').innerHTML =
+        '<li class="recent-item"><span class="recent-title" style="color:var(--mist-gray)">Could not load posts.</span></li>';
+    }
+  }
+
+  loadRecentPosts();
 </script>
 
 </body>
