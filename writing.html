@@ -246,7 +246,25 @@ function toggleTag(tag) {
   document.querySelectorAll('.tag-btn').forEach(btn => {
     btn.classList.toggle('active', activeTags.has(btn.dataset.tag));
   });
+  saveTagsToURL();
   renderPosts(allPosts);
+}
+
+function saveTagsToURL() {
+  const params = new URLSearchParams();
+  const tags = [...activeTags].filter(t => t !== 'All');
+  if (tags.length > 0) params.set('tags', tags.join(','));
+  const newURL = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+  history.replaceState(null, '', newURL);
+}
+
+function loadTagsFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const tags = params.get('tags');
+  if (tags) {
+    activeTags.clear();
+    tags.split(',').forEach(t => activeTags.add(t.trim()));
+  }
 }
 
 function renderPosts(posts) {
@@ -300,6 +318,7 @@ function copyLink(slug) {
   });
 }
 
+loadTagsFromURL();
 fetchPosts();
 </script>
 </body>
