@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — Arpit Purohit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --deep-violet:  #2E2A52;
+      --dusty-violet: #8175DB;
+      --lilac-mist:   #E8E5F9;
+      --cream:        #FAF9F5;
+      --stone:        #3F3F46;
+      --mist-gray:    #A1A1AA;
+      --red:          #DC2626;
+      --green:        #16A34A;
+      --max-w:        680px;
+      --pad:          clamp(20px, 5vw, 48px);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--cream);
+      color: var(--stone);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ── LOGIN SCREEN ── */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 32px var(--pad);
+    }
+    .login-box {
+      width: 100%; max-width: 420px;
+      background: white;
+      border: 1px solid rgba(46,42,82,0.1);
+      border-radius: 16px;
+      padding: 40px;
+    }
+    .login-logo {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px; font-weight: 600;
+      color: var(--mist-gray);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+    .login-title {
+      font-size: 22px; font-weight: 600;
+      color: var(--deep-violet);
+      margin-bottom: 8px;
+    }
+    .login-sub {
+      font-size: 13px; color: var(--mist-gray);
+      margin-bottom: 32px;
+    }
+
+    /* ── FORM ELEMENTS ── */
+    .field { margin-bottom: 20px; }
+    label {
+      display: block;
+      font-size: 12px; font-weight: 500;
+      color: var(--deep-violet);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    input[type=text], input[type=password], input[type=date],
+    textarea, select {
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--stone);
+      background: var(--cream);
+      border: 1px solid rgba(46,42,82,0.18);
+      border-radius: 8px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+    input[type=text]:focus, input[type=password]:focus,
+    input[type=date]:focus, textarea:focus, select:focus {
+      border-color: var(--dusty-violet);
+    }
+    textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
+    .hint { font-size: 11px; color: var(--mist-gray); margin-top: 4px; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px; font-weight: 500;
+      border: none; border-radius: 8px;
+      padding: 11px 24px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary {
+      background: var(--deep-violet); color: var(--cream);
+      width: 100%;
+      justify-content: center;
+    }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+    .btn-danger { background: #FEE2E2; color: var(--red); font-size: 13px; }
+    .btn-danger:hover { background: #FCA5A5; }
+    .btn-sm { padding: 7px 14px; font-size: 13px; }
+
+    /* ── ADMIN LAYOUT ── */
+    #adminScreen { display: none; }
+    .admin-header {
+      background: white;
+      border-bottom: 1px solid rgba(46,42,82,0.1);
+      padding: 0 var(--pad);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .admin-header-inner {
+      max-width: calc(var(--max-w) + 200px);
+      margin: 0 auto;
+      height: 52px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .admin-brand {
+      font-size: 13px; font-weight: 600;
+      color: var(--deep-violet);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .admin-user {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 13px; color: var(--mist-gray);
+    }
+
+    .admin-body {
+      max-width: calc(var(--max-w) + 200px);
+      margin: 0 auto;
+      padding: 40px var(--pad);
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 720px) {
+      .admin-body { grid-template-columns: 1fr; }
+    }
+
+    .form-card {
+      background: white;
+      border: 1px solid rgba(46,42,82,0.1);
+      border-radius: 16px;
+      padding: 32px;
+    }
+    .form-title {
+      font-size: 18px; font-weight: 600;
+      color: var(--deep-violet);
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(46,42,82,0.08);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } }
+
+    /* ── SIDEBAR ── */
+    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+    .side-card {
+      background: white;
+      border: 1px solid rgba(46,42,82,0.1);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .side-title {
+      font-size: 13px; font-weight: 600;
+      color: var(--deep-violet);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    /* ── STATUS ── */
+    #statusBox {
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      display: none;
+      margin-top: 20px;
+    }
+    #statusBox.success { background: #DCFCE7; color: var(--green); display: block; }
+    #statusBox.error   { background: #FEE2E2; color: var(--red);   display: block; }
+    #statusBox.loading { background: var(--lilac-mist); color: var(--dusty-violet); display: block; }
+
+    /* ── POST COUNT ── */
+    .stat { text-align: center; padding: 12px; }
+    .stat-num { font-size: 28px; font-weight: 600; color: var(--deep-violet); }
+    .stat-label { font-size: 12px; color: var(--mist-gray); margin-top: 2px; }
+
+    /* ── RECENT POSTS LIST ── */
+    .recent-list { list-style: none; }
+    .recent-list li {
+      font-size: 12px; color: var(--stone);
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(46,42,82,0.06);
+      line-height: 1.4;
+    }
+    .recent-list li:last-child { border-bottom: none; }
+    .recent-date { color: var(--mist-gray); font-size: 11px; }
+
+    /* ── TOKEN SETUP ── */
+    .token-row { display: flex; gap: 8px; }
+    .token-row input { flex: 1; font-family: monospace; font-size: 12px; }
+    #tokenStatus { font-size: 11px; margin-top: 6px; }
+    #tokenStatus.ok  { color: var(--green); }
+    #tokenStatus.bad { color: var(--red); }
+
+    /* ── SPINNER ── */
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid rgba(250,249,245,0.4);
+      border-top-color: var(--cream);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN SCREEN ══════════════ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Arpit Purohit · Website</div>
+    <div class="login-title">Admin Panel</div>
+    <div class="login-sub">Enter your password to continue.</div>
+    <div class="field">
+      <label for="loginPass">Password</label>
+      <input type="password" id="loginPass" placeholder="Enter password" autocomplete="current-password"/>
+    </div>
+    <button class="btn btn-primary" onclick="doLogin()">Sign In</button>
+    <div id="loginError" style="color:var(--red);font-size:12px;margin-top:12px;display:none;">Incorrect password.</div>
+  </div>
+</div>
+
+<!-- ══════════════ ADMIN SCREEN ══════════════ -->
+<div id="adminScreen">
+
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <span class="admin-brand">Admin Panel</span>
+      <div class="admin-user">
+        <span id="repoLabel" style="font-size:12px;"></span>
+        <button class="btn btn-danger btn-sm" onclick="doLogout()">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="admin-body">
+
+    <!-- ── MAIN FORM ── -->
+    <div>
+      <div class="form-card">
+        <div class="form-title">Add New Post</div>
+
+        <div class="field">
+          <label for="fTitle">Post Title *</label>
+          <input type="text" id="fTitle" placeholder="e.g. Why most GTM strategies fail"/>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="fDate">Date *</label>
+            <input type="date" id="fDate"/>
+          </div>
+          <div class="field">
+            <label for="fTop">Top Post?</label>
+            <select id="fTop">
+              <option value="No">No</option>
+              <option value="Yes">Yes</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="fLinkedin">LinkedIn URL</label>
+          <input type="text" id="fLinkedin" placeholder="https://linkedin.com/posts/..."/>
+        </div>
+
+        <div class="field">
+          <label for="fTags">Tags</label>
+          <input type="text" id="fTags" placeholder="GTM Strategy, SaaS, Positioning"/>
+          <div class="hint">Comma-separated. Match existing tags exactly for filters to work.</div>
+        </div>
+
+        <div class="field">
+          <label for="fImage">Image Filename</label>
+          <input type="text" id="fImage" placeholder="images/my-image.webp"/>
+          <div class="hint">Leave blank if no image. Upload the image file to GitHub first.</div>
+        </div>
+
+        <div class="field">
+          <label for="fBody">Post Body</label>
+          <textarea id="fBody" rows="8" placeholder="Paste your full post text here..."></textarea>
+        </div>
+
+        <button class="btn btn-primary" id="submitBtn" onclick="submitPost()">
+          <span class="spinner" id="submitSpinner"></span>
+          <span id="submitLabel">Publish Post</span>
+        </button>
+
+        <div id="statusBox"></div>
+      </div>
+    </div>
+
+    <!-- ── SIDEBAR ── -->
+    <div class="sidebar">
+
+      <!-- GitHub Token -->
+      <div class="side-card">
+        <div class="side-title">GitHub Token</div>
+        <div class="field" style="margin-bottom:8px;">
+          <div class="token-row">
+            <input type="password" id="ghToken" placeholder="ghp_..." autocomplete="off"/>
+            <button class="btn btn-sm" style="background:var(--lilac-mist);color:var(--deep-violet);white-space:nowrap;" onclick="saveToken()">Save</button>
+          </div>
+          <div id="tokenStatus"></div>
+        </div>
+        <div class="hint">Token is stored only in your browser (sessionStorage). Never saved publicly.</div>
+      </div>
+
+      <!-- Stats -->
+      <div class="side-card">
+        <div class="side-title">Posts</div>
+        <div class="stat">
+          <div class="stat-num" id="postCount">—</div>
+          <div class="stat-label">Total posts in posts.json</div>
+        </div>
+      </div>
+
+      <!-- Recent posts -->
+      <div class="side-card">
+        <div class="side-title">Recent Posts</div>
+        <ul class="recent-list" id="recentList">
+          <li style="color:var(--mist-gray);font-size:12px;">Loading...</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG — edit these two lines ──────────────────────────────
+const REPO_OWNER = 'arpitpurohit57';
+const REPO_NAME  = 'arpitpurohit57.github.io';
+const POSTS_FILE = 'posts.json';
+const PASSWORD   = 'arpit2025admin'; // change this to whatever you want
+// ───────────────────────────────────────────────────────────────
+
+let cachedPosts = [];
+let fileSHA = '';
+
+// ── LOGIN ──
+function doLogin() {
+  const val = document.getElementById('loginPass').value;
+  if (val === PASSWORD) {
+    sessionStorage.setItem('ap_admin', '1');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminScreen').style.display = 'block';
+    document.getElementById('repoLabel').textContent = `${REPO_OWNER}/${REPO_NAME}`;
+    // Set today's date
+    document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+    // Load saved token
+    const saved = sessionStorage.getItem('ap_gh_token');
+    if (saved) {
+      document.getElementById('ghToken').value = saved;
+      loadPosts();
+    }
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+function doLogout() {
+  sessionStorage.removeItem('ap_admin');
+  sessionStorage.removeItem('ap_gh_token');
+  document.getElementById('adminScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginPass').value = '';
+}
+
+// Auto-restore session
+window.addEventListener('DOMContentLoaded', () => {
+  if (sessionStorage.getItem('ap_admin') === '1') {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminScreen').style.display = 'block';
+    document.getElementById('repoLabel').textContent = `${REPO_OWNER}/${REPO_NAME}`;
+    document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+    const saved = sessionStorage.getItem('ap_gh_token');
+    if (saved) { document.getElementById('ghToken').value = saved; loadPosts(); }
+  }
+  document.getElementById('loginPass').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+});
+
+// ── TOKEN ──
+function saveToken() {
+  const t = document.getElementById('ghToken').value.trim();
+  if (!t.startsWith('ghp_') && !t.startsWith('github_pat_')) {
+    setTokenStatus('Doesn\'t look like a valid token (should start with ghp_)', false);
+    return;
+  }
+  sessionStorage.setItem('ap_gh_token', t);
+  setTokenStatus('Token saved ✓', true);
+  loadPosts();
+}
+
+function setTokenStatus(msg, ok) {
+  const el = document.getElementById('tokenStatus');
+  el.textContent = msg;
+  el.className = ok ? 'ok' : 'bad';
+}
+
+function getToken() {
+  return sessionStorage.getItem('ap_gh_token') || '';
+}
+
+// ── LOAD POSTS FROM GITHUB ──
+async function loadPosts() {
+  const token = getToken();
+  if (!token) return;
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${POSTS_FILE}`,
+      { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (!res.ok) { setTokenStatus('Token error — check permissions', false); return; }
+    const data = await res.json();
+    fileSHA = data.sha;
+    cachedPosts = JSON.parse(atob(data.content.replace(/\n/g, '')));
+    cachedPosts.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+    updateSidebar();
+    setTokenStatus('Connected ✓', true);
+  } catch(e) {
+    setTokenStatus('Failed to load posts.json', false);
+  }
+}
+
+function updateSidebar() {
+  document.getElementById('postCount').textContent = cachedPosts.length;
+  const list = document.getElementById('recentList');
+  const recent = cachedPosts.slice(0, 7);
+  list.innerHTML = recent.map(p => `
+    <li>
+      <div>${p['Post Title'] || 'Untitled'}</div>
+      <div class="recent-date">${p.Date || ''}</div>
+    </li>`).join('');
+}
+
+// ── SUBMIT NEW POST ──
+async function submitPost() {
+  const token = getToken();
+  if (!token) { showStatus('Please save your GitHub token first.', 'error'); return; }
+
+  const title = document.getElementById('fTitle').value.trim();
+  const date  = document.getElementById('fDate').value.trim();
+  if (!title) { showStatus('Post title is required.', 'error'); return; }
+  if (!date)  { showStatus('Date is required.', 'error'); return; }
+
+  // Check for duplicate
+  const isDuplicate = cachedPosts.some(p => (p['Post Title'] || '').toLowerCase() === title.toLowerCase());
+  if (isDuplicate) {
+    showStatus('A post with this title already exists. Change the title slightly.', 'error');
+    return;
+  }
+
+  const newPost = {
+    'Post Title':           title,
+    'Date':                 date,
+    'LinkedIn URL':         document.getElementById('fLinkedin').value.trim(),
+    'Tags':                 document.getElementById('fTags').value.trim(),
+    'Is it a "Top" post?':  document.getElementById('fTop').value,
+    'Body':                 document.getElementById('fBody').value.trim(),
+    'Image URL':            document.getElementById('fImage').value.trim(),
+  };
+
+  setLoading(true);
+  showStatus('Publishing post…', 'loading');
+
+  // Re-fetch current SHA to avoid conflicts
+  try {
+    const check = await fetch(
+      `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${POSTS_FILE}`,
+      { headers: { Authorization: `token ${token}` } }
+    );
+    const checkData = await check.json();
+    fileSHA = checkData.sha;
+    const currentPosts = JSON.parse(atob(checkData.content.replace(/\n/g, '')));
+    const updatedPosts = [newPost, ...currentPosts];
+    const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(updatedPosts, null, 2))));
+
+    const putRes = await fetch(
+      `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${POSTS_FILE}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `token ${token}`,
+          'Content-Type': 'application/json',
+          Accept: 'application/vnd.github.v3+json',
+        },
+        body: JSON.stringify({
+          message: `Add post: ${title}`,
+          content: newContent,
+          sha: fileSHA,
+        }),
+      }
+    );
+
+    if (putRes.ok) {
+      showStatus('✓ Post published! Your site will update in ~30 seconds.', 'success');
+      clearForm();
+      cachedPosts = updatedPosts.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+      updateSidebar();
+    } else {
+      const err = await putRes.json();
+      showStatus(`GitHub error: ${err.message}`, 'error');
+    }
+  } catch(e) {
+    showStatus(`Error: ${e.message}`, 'error');
+  }
+
+  setLoading(false);
+}
+
+function setLoading(on) {
+  document.getElementById('submitBtn').disabled = on;
+  document.getElementById('submitSpinner').style.display = on ? 'block' : 'none';
+  document.getElementById('submitLabel').textContent = on ? 'Publishing…' : 'Publish Post';
+}
+
+function showStatus(msg, type) {
+  const el = document.getElementById('statusBox');
+  el.textContent = msg;
+  el.className = type;
+}
+
+function clearForm() {
+  document.getElementById('fTitle').value = '';
+  document.getElementById('fLinkedin').value = '';
+  document.getElementById('fTags').value = '';
+  document.getElementById('fImage').value = '';
+  document.getElementById('fBody').value = '';
+  document.getElementById('fTop').value = 'No';
+  document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+}
+</script>
+</body>
+</html>
