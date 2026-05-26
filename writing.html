@@ -266,7 +266,7 @@ function renderPosts(posts) {
     return;
   }
   list.innerHTML = filtered.map((p, i) => {
-    const slug = slugify(p['Post Title'] || '', i);
+    const slug = slugify(p['Post Title'] || '');
     const tags = p.Tags ? p.Tags.split(',').map(t => t.trim()) : [];
     const tagPills = tags.map(t => `<span class="post-tag-pill">${t}</span>`).join('');
     return `
@@ -288,8 +288,8 @@ function renderPosts(posts) {
   sessionStorage.setItem('ap_posts', JSON.stringify(allPosts));
 }
 
-function slugify(title, index) {
-  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + index;
+function slugify(title) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 
 function copyLink(slug) {
