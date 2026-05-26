@@ -243,8 +243,8 @@
 <script>
 const POSTS_URL = 'posts.json';
 
-function slugify(title, index) {
-  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + index;
+function slugify(title) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 
 function getParam(name) {
@@ -263,7 +263,7 @@ function buildPostNav(posts, currentIndex) {
   let html = '';
 
   if (newerPost) {
-    const newerSlug = slugify(newerPost['Post Title'] || '', currentIndex - 1);
+    const newerSlug = slugify(newerPost['Post Title'] || '');
     html += `<a class="post-nav-btn prev" href="post.html?id=${encodeURIComponent(newerSlug)}">
       <span class="post-nav-label">&#8592; Previous</span>
       <span class="post-nav-title">${newerPost['Post Title']}</span>
@@ -273,7 +273,7 @@ function buildPostNav(posts, currentIndex) {
   }
 
   if (olderPost) {
-    const olderSlug = slugify(olderPost['Post Title'] || '', currentIndex + 1);
+    const olderSlug = slugify(olderPost['Post Title'] || '');
     html += `<a class="post-nav-btn next" href="post.html?id=${encodeURIComponent(olderSlug)}">
       <span class="post-nav-label">Next &#8594;</span>
       <span class="post-nav-title">${olderPost['Post Title']}</span>
@@ -307,7 +307,7 @@ async function loadPost() {
   // Sort by date descending (latest first) — must match writing page order
   posts.sort((a, b) => new Date(b.Date) - new Date(a.Date));
 
-  const currentIndex = posts.findIndex((p, i) => slugify(p['Post Title'] || '', i) === id);
+  const currentIndex = posts.findIndex((p) => slugify(p['Post Title'] || '') === id);
   if (currentIndex === -1) { showError('Post not found.'); return; }
 
   const post = posts[currentIndex];
