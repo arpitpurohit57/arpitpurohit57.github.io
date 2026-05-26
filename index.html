@@ -431,9 +431,9 @@
   }
 
   // Load 3 latest posts dynamically
-  function slugify(title, index) {
-    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + index;
-  }
+  function slugify(title) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
 
   async function loadRecentPosts() {
     try {
@@ -444,7 +444,7 @@
       const top3 = posts.slice(0, 3);
       const list = document.getElementById('recentList');
       list.innerHTML = top3.map((p, i) => {
-        const slug = slugify(p['Post Title'] || '', i);
+        const slug = slugify(p['Post Title'] || '');
         return `<li class="recent-item">
           <a href="post.html?id=${encodeURIComponent(slug)}">
             <span class="recent-title">${p['Post Title'] || ''}</span>
