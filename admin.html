@@ -231,6 +231,53 @@
       display: none;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── TABS ── */
+    .admin-tabs {
+      max-width: calc(var(--max-w) + 200px);
+      margin: 0 auto;
+      padding: 24px var(--pad) 0;
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid rgba(46,42,82,0.1);
+    }
+    .tab-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px; font-weight: 500;
+      color: var(--mist-gray);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 8px 18px 12px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      margin-bottom: -1px;
+    }
+    .tab-btn:hover { color: var(--deep-violet); }
+    .tab-btn.active {
+      color: var(--deep-violet);
+      border-bottom-color: var(--dusty-violet);
+      font-weight: 600;
+    }
+
+    /* ── RESOURCE STATUS ── */
+    #rStatusBox {
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      display: none;
+      margin-top: 20px;
+    }
+    #rStatusBox.success { background: #DCFCE7; color: var(--green); display: block; }
+    #rStatusBox.error   { background: #FEE2E2; color: var(--red);   display: block; }
+    #rStatusBox.loading { background: var(--lilac-mist); color: var(--dusty-violet); display: block; }
+
+    /* Resource count sidebar */
+    .stat-num-sm { font-size: 22px; font-weight: 600; color: var(--deep-violet); }
+
+    /* Toggle helper */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
   </style>
 </head>
 <body>
@@ -263,6 +310,14 @@
     </div>
   </header>
 
+  <!-- ── TABS ── -->
+  <div class="admin-tabs">
+    <button class="tab-btn active" id="tabPosts" onclick="switchTab('posts')">📝  Add Post</button>
+    <button class="tab-btn" id="tabResources" onclick="switchTab('resources')">📦  Add Resource</button>
+  </div>
+
+  <!-- ══ TAB: POSTS ══ -->
+  <div class="tab-panel active" id="panelPosts">
   <div class="admin-body">
 
     <!-- ── MAIN FORM ── -->
@@ -355,7 +410,93 @@
 
     </div>
   </div>
-</div>
+  </div><!-- /panelPosts -->
+
+  <!-- ══ TAB: RESOURCES ══ -->
+  <div class="tab-panel" id="panelResources">
+  <div class="admin-body">
+
+    <!-- ── RESOURCE FORM ── -->
+    <div>
+      <div class="form-card">
+        <div class="form-title">Add New Resource</div>
+
+        <div class="field">
+          <label for="rTitle">Resource Title *</label>
+          <input type="text" id="rTitle" placeholder="e.g. Positioning Canvas Template"/>
+        </div>
+
+        <div class="field">
+          <label for="rHook">Hook Line *</label>
+          <input type="text" id="rHook" placeholder="e.g. Lock your positioning before writing a single word of copy."/>
+          <div class="hint">The punchy one-liner shown in the cream section of the card. Make it outcome-focused.</div>
+        </div>
+
+        <div class="field">
+          <label for="rDescription">Description *</label>
+          <textarea id="rDescription" rows="4" placeholder="Short description shown on hover — 1-2 sentences explaining what this resource helps with."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="rTag">Tag / Label *</label>
+            <input type="text" id="rTag" placeholder="e.g. Template, eBook, Course, 1:1 Call"/>
+            <div class="hint">Shown as the badge on the card. Keep it short — 1-2 words.</div>
+          </div>
+          <div class="field">
+            <label for="rPrice">Price (optional)</label>
+            <input type="text" id="rPrice" placeholder="e.g. $49 or Free"/>
+            <div class="hint">Shown inside the card on hover. Leave blank to hide.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="rLink">Download / Purchase Link *</label>
+          <input type="text" id="rLink" placeholder="https://..."/>
+          <div class="hint">The URL people go to when they click the card.</div>
+        </div>
+
+        <button class="btn btn-primary" id="rSubmitBtn" onclick="submitResource()">
+          <span class="spinner" id="rSubmitSpinner"></span>
+          <span id="rSubmitLabel">Publish Resource</span>
+        </button>
+
+        <div id="rStatusBox"></div>
+      </div>
+    </div>
+
+    <!-- ── SIDEBAR ── -->
+    <div class="sidebar">
+
+      <!-- GitHub Token (shared) -->
+      <div class="side-card">
+        <div class="side-title">GitHub Token</div>
+        <div class="hint" style="margin-bottom:8px;">Uses the same token saved in the Posts tab.</div>
+        <div id="rTokenStatus" style="font-size:12px;color:var(--mist-gray);"></div>
+      </div>
+
+      <!-- Resource count -->
+      <div class="side-card">
+        <div class="side-title">Resources</div>
+        <div class="stat">
+          <div class="stat-num" id="resourceCount">—</div>
+          <div class="stat-label">Total resources in resources.json</div>
+        </div>
+      </div>
+
+      <!-- Recent resources list -->
+      <div class="side-card">
+        <div class="side-title">Current Resources</div>
+        <ul class="recent-list" id="recentResourceList">
+          <li style="color:var(--mist-gray);font-size:12px;">Loading...</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+  </div><!-- /panelResources -->
+
+</div><!-- /adminScreen -->
 
 <script>
 // ── CONFIG — edit these two lines ──────────────────────────────
@@ -561,6 +702,159 @@ function clearForm() {
   document.getElementById('fBody').value = '';
   document.getElementById('fTop').value = 'No';
   document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+}
+
+// ── TABS ──
+function switchTab(tab) {
+  document.getElementById('panelPosts').classList.toggle('active', tab === 'posts');
+  document.getElementById('panelResources').classList.toggle('active', tab === 'resources');
+  document.getElementById('tabPosts').classList.toggle('active', tab === 'posts');
+  document.getElementById('tabResources').classList.toggle('active', tab === 'resources');
+  if (tab === 'resources') loadResources();
+}
+
+// ── RESOURCE DATA ──
+const RESOURCES_FILE = 'resources.json';
+let cachedResources = [];
+let resourcesSHA = '';
+
+async function loadResources() {
+  const token = getToken();
+  const statusEl = document.getElementById('rTokenStatus');
+  if (!token) {
+    if (statusEl) statusEl.textContent = 'No token saved — go to Add Post tab to enter it.';
+    return;
+  }
+  if (statusEl) statusEl.textContent = 'Loading...';
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${RESOURCES_FILE}`,
+      { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (res.status === 404) {
+      // File doesn't exist yet — that's fine
+      cachedResources = [];
+      resourcesSHA = '';
+      updateResourceSidebar();
+      if (statusEl) statusEl.textContent = 'resources.json not found — will be created on first publish.';
+      return;
+    }
+    if (!res.ok) { if (statusEl) statusEl.textContent = 'Token error — check permissions.'; return; }
+    const data = await res.json();
+    resourcesSHA = data.sha;
+    cachedResources = JSON.parse(atob(data.content.replace(/\n/g, '')));
+    updateResourceSidebar();
+    if (statusEl) statusEl.textContent = 'Connected ✓';
+  } catch(e) {
+    if (statusEl) statusEl.textContent = 'Failed to load resources.json';
+  }
+}
+
+function updateResourceSidebar() {
+  document.getElementById('resourceCount').textContent = cachedResources.length;
+  const list = document.getElementById('recentResourceList');
+  if (!cachedResources.length) {
+    list.innerHTML = '<li style="color:var(--mist-gray);font-size:12px;">No resources yet.</li>';
+    return;
+  }
+  list.innerHTML = cachedResources.map(r => `
+    <li>
+      <div>${r.title || 'Untitled'}</div>
+      <div class="recent-date">${r.tag || ''} ${r.price ? '· ' + r.price : ''}</div>
+      ${r.hook ? `<div class="recent-date" style="font-style:italic;margin-top:2px;">"${r.hook}"</div>` : ''}
+    </li>`).join('');
+}
+
+async function submitResource() {
+  const token = getToken();
+  if (!token) { showRStatus('Please save your GitHub token in the Add Post tab first.', 'error'); return; }
+
+  const title = document.getElementById('rTitle').value.trim();
+  const hook  = document.getElementById('rHook').value.trim();
+  const desc  = document.getElementById('rDescription').value.trim();
+  const link  = document.getElementById('rLink').value.trim();
+  const tag   = document.getElementById('rTag').value.trim();
+  const price = document.getElementById('rPrice').value.trim();
+
+  if (!title) { showRStatus('Resource title is required.', 'error'); return; }
+  if (!hook)  { showRStatus('Hook line is required.', 'error'); return; }
+  if (!tag)   { showRStatus('Tag / label is required.', 'error'); return; }
+  if (!desc)  { showRStatus('Description is required.', 'error'); return; }
+  if (!link)  { showRStatus('Download / purchase link is required.', 'error'); return; }
+
+  const newResource = { title, hook, description: desc, tag, link };
+  if (price) newResource.price = price;
+
+  setRLoading(true);
+  showRStatus('Publishing resource…', 'loading');
+
+  try {
+    // Try fetching current file to get SHA
+    let currentResources = [];
+    let sha = '';
+    const check = await fetch(
+      `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${RESOURCES_FILE}`,
+      { headers: { Authorization: `token ${token}` } }
+    );
+    if (check.ok) {
+      const checkData = await check.json();
+      sha = checkData.sha;
+      currentResources = JSON.parse(atob(checkData.content.replace(/\n/g, '')));
+    }
+
+    const updatedResources = [...currentResources, newResource];
+    const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(updatedResources, null, 2))));
+
+    const body = { message: `Add resource: ${title}`, content: newContent };
+    if (sha) body.sha = sha;
+
+    const putRes = await fetch(
+      `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${RESOURCES_FILE}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `token ${token}`,
+          'Content-Type': 'application/json',
+          Accept: 'application/vnd.github.v3+json',
+        },
+        body: JSON.stringify(body),
+      }
+    );
+
+    if (putRes.ok) {
+      showRStatus('✓ Resource published! Your site will update in ~30 seconds.', 'success');
+      clearResourceForm();
+      cachedResources = updatedResources;
+      updateResourceSidebar();
+    } else {
+      const err = await putRes.json();
+      showRStatus(`GitHub error: ${err.message}`, 'error');
+    }
+  } catch(e) {
+    showRStatus(`Error: ${e.message}`, 'error');
+  }
+  setRLoading(false);
+}
+
+function setRLoading(on) {
+  document.getElementById('rSubmitBtn').disabled = on;
+  document.getElementById('rSubmitSpinner').style.display = on ? 'block' : 'none';
+  document.getElementById('rSubmitLabel').textContent = on ? 'Publishing…' : 'Publish Resource';
+}
+
+function showRStatus(msg, type) {
+  const el = document.getElementById('rStatusBox');
+  el.textContent = msg;
+  el.className = type;
+}
+
+function clearResourceForm() {
+  document.getElementById('rTitle').value = '';
+  document.getElementById('rHook').value = '';
+  document.getElementById('rDescription').value = '';
+  document.getElementById('rLink').value = '';
+  document.getElementById('rTag').value = '';
+  document.getElementById('rPrice').value = '';
 }
 </script>
 </body>
