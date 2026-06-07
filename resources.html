@@ -296,7 +296,7 @@
     }
 
     /* ── FOOTER ── */
-       .site-footer {
+    .site-footer {
       background: var(--deep-violet);
       padding: 40px var(--pad);
     }
@@ -336,6 +336,7 @@
       font-size: 12px;
       color: rgba(250,249,245,0.3);
     }
+
     /* ── ANIMATIONS ── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(22px); }
@@ -349,10 +350,18 @@
     .fu-5 { animation-delay: .54s; }
     .fu-6 { animation-delay: .66s; }
 
+    /* ── STATUS MESSAGES (loading / empty / error states) ── */
+    .resources-status {
+      text-align: center;
+      color: var(--mist-gray);
+      font-size: 14px;
+      padding: 48px 20px;
+    }
+    .resources-status p { margin: 0; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       .cards-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
-      .footer-nav { display: none; }
     }
     @media (max-width: 480px) {
       .cards-grid { grid-template-columns: 1fr; max-width: 320px; margin: 0 auto; }
@@ -384,113 +393,150 @@
     <p class="hero-sub fu fu-3">Templates, frameworks and guides built from real GTM work — not theory. A few are free. Some are paid. All of them are things I've used myself.</p>
   </section>
 
-  <!-- ── CARDS ── -->
+  <!-- ── CARDS ──
+       Rendered dynamically from resources.json (managed via admin.html).
+       The container starts empty; states below cover loading / empty / error. ── -->
   <section class="resources-section">
-    <div class="cards-grid" id="cardsGrid">
 
-      <!-- Card 1 -->
-      <a href="#" class="resource-card fu fu-4">
-        <div class="card-top">
-          <div class="card-hook">Lock your positioning before writing a single word of copy.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-tag">Template</div>
-          <div class="card-dark-title">Positioning Canvas Template</div>
-          <div class="card-meta"><span class="card-price">Free</span></div>
-          <div class="card-divider"></div>
-          <div class="card-expand">
-            <p class="card-desc">The exact framework I use with clients to lock down positioning before touching a single word of copy. Fill it in and your messaging practically writes itself.</p>
-            <span class="card-cta">
-              Learn More
-              <span class="cta-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            </span>
-          </div>
-        </div>
-      </a>
+    <!-- Loading state (shown until JSON resolves) -->
+    <div id="resourcesLoading" class="resources-status">Loading resources…</div>
 
-      <!-- Card 2 -->
-      <a href="#" class="resource-card fu fu-5">
-        <div class="card-top">
-          <div class="card-hook">How to fix your SaaS homepage in an afternoon.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-tag">Checklist</div>
-          <div class="card-dark-title">B2B SaaS Homepage Checklist</div>
-          <div class="card-meta"><span class="card-price">Free</span></div>
-          <div class="card-divider"></div>
-          <div class="card-expand">
-            <p class="card-desc">25 questions to audit your homepage section by section. If you can't answer all 25, your visitors definitely can't either. Brutal but useful.</p>
-            <span class="card-cta">
-              Learn More
-              <span class="cta-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            </span>
-          </div>
-        </div>
-      </a>
+    <!-- Empty state (shown if resources.json is missing or has no entries) -->
+    <div id="resourcesEmpty" class="resources-status" style="display:none;">
+      <p>No resources yet — check back soon.</p>
+    </div>
 
-      <!-- Card 3 -->
-      <a href="#" class="resource-card fu fu-6">
-        <div class="card-top">
-          <div class="card-hook">Stop guessing who you're selling to.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-tag">Worksheet</div>
-          <div class="card-dark-title">ICP Definition Worksheet</div>
-          <div class="card-meta"><span class="card-price">Free</span></div>
-          <div class="card-divider"></div>
-          <div class="card-expand">
-            <p class="card-desc">Stop guessing who you're selling to. This worksheet walks you through use-case, category, and firmographic layers to build a sharp Ideal Customer Profile.</p>
-            <span class="card-cta">
-              Learn More
-              <span class="cta-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            </span>
-          </div>
-        </div>
-      </a>
+    <!-- Error state (shown only if resources.json fails in an unexpected way) -->
+    <div id="resourcesError" class="resources-status" style="display:none;">
+      <p>Couldn't load resources. Please refresh the page.</p>
+    </div>
 
-    </div><!-- /cards-grid -->
+    <div class="cards-grid" id="cardsGrid"></div>
   </section>
 
 </div><!-- /page-wrap -->
 
-<!-- ── FOOTER ── -->
+<!-- FOOTER -->
 <footer class="site-footer">
   <div class="footer-inner">
-    <a href="index.html" class="footer-logo">Arpit Purohit<span>.</span></a>
-    <ul class="footer-nav">
+    <a href="index.html" class="footer-name">Arpit Purohit</a>
+    <ul class="footer-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="writing.html">Writing</a></li>
-      <li><a href="resources.html">Resources</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
-    <div class="footer-copy">© 2026 Arpit Purohit</div>
+    <div class="footer-copy">© 2026 Arpit Purohit </div>
   </div>
 </footer>
 
 <script>
-  // Load resources from resources.json and render cards
+  /* ============================================
+     RESOURCES PAGE — DYNAMIC LOADER
+     ============================================
+     Cards are rendered from resources.json (managed via admin.html).
+     Schema per resource (from admin.html):
+       { title, hook, description, tag, link, price (optional) }
+
+     Routing logic per card:
+       - If `link` is an external URL (starts with http/https) →
+         the card opens that URL directly in a new tab (no lead capture).
+       - If `link` is a local path (e.g. "pdfs/foo.pdf") →
+         the card routes through resource.html?id=<slug-of-title> for the
+         name+email gate, then serves the file.
+
+     The resource "id" used in the URL is auto-derived from the title.
+     ============================================ */
+
+  /* Turn "Positioning Canvas Template" → "positioning-canvas-template" */
+  function slugify(str) {
+    return String(str || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  /* Treat http(s):// links as external — they skip the lead-capture page. */
+  function isExternalLink(link) {
+    return /^https?:\/\//i.test(String(link || ''));
+  }
+
+  /* Minimal HTML-escape so titles/hooks with quotes or < > render safely. */
+  function esc(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function showStatus(which) {
+    ['resourcesLoading','resourcesEmpty','resourcesError'].forEach(id => {
+      document.getElementById(id).style.display = (id === which) ? 'block' : 'none';
+    });
+  }
+  function hideAllStatus() {
+    ['resourcesLoading','resourcesEmpty','resourcesError'].forEach(id => {
+      document.getElementById(id).style.display = 'none';
+    });
+  }
+
   async function loadResources() {
+    showStatus('resourcesLoading');
     try {
-      const res = await fetch('resources.json');
-      if (!res.ok) return; // use hardcoded cards if no JSON yet
+      const res = await fetch('resources.json', { cache: 'no-cache' });
+
+      /* 404 → admin hasn't published anything yet. That's not an error,
+         it's just "no resources yet". */
+      if (res.status === 404) {
+        showStatus('resourcesEmpty');
+        return;
+      }
+      if (!res.ok) {
+        showStatus('resourcesError');
+        return;
+      }
+
       const data = await res.json();
-      if (!data || !data.length) return;
+      if (!Array.isArray(data) || data.length === 0) {
+        showStatus('resourcesEmpty');
+        return;
+      }
+
+      hideAllStatus();
       renderCards(data);
-    } catch(e) {
-      // Silently fall back to the hardcoded cards already in the HTML
+    } catch (err) {
+      console.error('Failed to load resources.json:', err);
+      showStatus('resourcesError');
     }
   }
 
   function renderCards(resources) {
     const grid = document.getElementById('cardsGrid');
     const delays = ['fu-4','fu-5','fu-6','fu-7','fu-8','fu-9'];
+
     grid.innerHTML = resources.map((r, i) => {
-      const tagLabel   = r.tag || r.type || 'Resource';
-      const hookText   = r.hook || r.title || '';
-      const priceHTML  = r.price ? `<span class="card-price">${r.price}</span>` : '';
+      const tagLabel   = esc(r.tag || 'Resource');
+      const hookText   = esc(r.hook || r.title || '');
+      const titleText  = esc(r.title || '');
+      const descText   = esc(r.description || '');
+      const priceHTML  = r.price ? `<span class="card-price">${esc(r.price)}</span>` : '';
       const delayClass = delays[i] || '';
-      const href       = r.link || '#';
-      const target     = r.link && r.link !== '#' ? 'target="_blank" rel="noopener"' : '';
+
+      /* Decide where the card points:
+         - External URL → open directly, new tab.
+         - Local path (PDF in this repo) → route through lead-capture page. */
+      let href, target = '';
+      if (r.link && isExternalLink(r.link)) {
+        href   = r.link;
+        target = 'target="_blank" rel="noopener"';
+      } else if (r.title) {
+        /* Internal flow — use slugified title as the URL id. */
+        href = `resource.html?id=${encodeURIComponent(slugify(r.title))}`;
+      } else {
+        href = '#';
+      }
+
       return `
         <a href="${href}" ${target} class="resource-card fu ${delayClass}">
           <div class="card-top">
@@ -498,11 +544,11 @@
           </div>
           <div class="card-bottom">
             <div class="card-tag">${tagLabel}</div>
-            <div class="card-dark-title">${r.title || ''}</div>
+            <div class="card-dark-title">${titleText}</div>
             <div class="card-meta">${priceHTML}</div>
             <div class="card-divider"></div>
             <div class="card-expand">
-              <p class="card-desc">${r.description || ''}</p>
+              <p class="card-desc">${descText}</p>
               <span class="card-cta">
                 Learn More
                 <span class="cta-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
