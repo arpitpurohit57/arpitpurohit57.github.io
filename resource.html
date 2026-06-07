@@ -642,16 +642,17 @@
             <input type="text" id="name" name="name" autocomplete="name" required maxlength="100" />
             <span class="error-text" id="nameError">Please enter your name.</span>
           </div>
-          <div class="field">
-            <label for="designation">Job Title</label>
-            <input type="text" id="designation" name="designation" autocomplete="designation" required maxlength="200" />
-            <span class="error-text" id="designationError">Please enter your job title.</span>
-          </div>
 
           <div class="field">
             <label for="email">Email address</label>
             <input type="email" id="email" name="email" autocomplete="email" required maxlength="200" />
             <span class="error-text" id="emailError">Please enter a valid email address.</span>
+          </div>
+
+          <div class="field">
+            <label for="jobTitle">Job title</label>
+            <input type="text" id="jobTitle" name="jobTitle" autocomplete="organization-title" required maxlength="100" />
+            <span class="error-text" id="jobTitleError">Please enter your job title.</span>
           </div>
 
           <button type="submit" class="btn btn-solid submit-btn" id="submitBtn">
@@ -661,7 +662,7 @@
 
           <div class="form-error-banner" id="formErrorBanner" role="alert"></div>
 
-          <p class="form-note">No spam. Your details are used only to deliver this resource and the occasional update.</p>
+          <p class="form-note">No spam — your details are used only to deliver this resource and the occasional update.</p>
         </form>
       </div>
 
@@ -669,7 +670,7 @@
       <div id="successState" class="success-state" role="region" aria-live="polite">
         <div class="success-eyebrow">Ready to go</div>
         <h1 class="success-title" id="successTitle">You're in!</h1>
-        <p class="success-sub" id="successSub">Tap the button below to download your file.</p>
+        <p class="success-sub" id="successSub">Tap the button below to download your file. We've also got it on file in case you need a re-send.</p>
 
         <a id="downloadBtn" class="btn btn-accent download-btn" download>
           <span class="btn-label" id="downloadLabel">Download</span>
@@ -740,24 +741,20 @@
    ────────────────────────────────────────────── */
 
 /* ──────────────────────────────────────────────
-   2) BACKEND (FORMSPREE)
+   2) BACKEND (GOOGLE APPS SCRIPT → GOOGLE SHEET)
    ──────────────────────────────────────────────
-   To collect leads (name + email), the form posts to Formspree —
-   a free service for static sites. Setup (takes 30 seconds):
+   Leads are sent to a Google Apps Script Web App that appends each
+   submission as a row in a Google Sheet on your Drive.
 
-     1. Go to https://formspree.io and create a free account.
-     2. Create a new form. Copy the form's endpoint URL.
-        It looks like: https://formspree.io/f/xyzabc123
-     3. Paste it as the value of FORMSPREE_ENDPOINT below.
+   To swap in a different sheet/script later, just replace the URL below
+   with a new Apps Script Web App URL (deployed with "Anyone" access).
 
-   Until you do that, the form still WORKS for visitors —
-   submissions are saved to the browser's localStorage as a fallback,
-   so the visitor gets their download. But you won't receive lead
-   info anywhere until Formspree is wired up. So set this up early.
-
-   Submissions arrive in your Formspree dashboard AND via email.
+   If the request fails (network down, script revoked, etc.), the lead
+   is still saved to localStorage so the visitor gets their download,
+   and you can recover it via the browser console:
+     console.log(JSON.parse(localStorage.getItem('lead_inbox') || '[]'))
    ────────────────────────────────────────────── */
-const FORMSPREE_ENDPOINT = 'https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID';
+const APPS_SCRIPT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxxHCF1kB5nFqwv5RnBNAyc3DW86QAKHAIeiq6V3eCdyyPuH-J-woVHRcbVPY6_vvJp9Q/exec';
 
 /* Holds the resource for this page after resources.json is fetched. */
 let CURRENT_RESOURCE = null;
@@ -880,14 +877,17 @@ function validateField(input, errorEl, isValid) {
   }
 }
 
-function validateForm(name, email) {
+function validateForm(name, email, jobTitle) {
   const nameInput = document.getElementById('name');
   const emailInput = document.getElementById('email');
+  const jobTitleInput = document.getElementById('jobTitle');
   const nameError = document.getElementById('nameError');
   const emailError = document.getElementById('emailError');
+  const jobTitleError = document.getElementById('jobTitleError');
 
   const nameValid = name.trim().length >= 1 && name.trim().length <= 100;
   const emailValid = EMAIL_RE.test(email.trim()) && email.trim().length <= 200;
+  const jobTitleValid = jobTitle.trim().length >= 1 && jobTitle.trim().length <= 100;
 
   if (!nameValid) {
     nameError.textContent = name.trim().length === 0
@@ -899,10 +899,16 @@ function validateForm(name, email) {
       ? 'Please enter your email address.'
       : 'That email address doesn\'t look right.';
   }
+  if (!jobTitleValid) {
+    jobTitleError.textContent = jobTitle.trim().length === 0
+      ? 'Please enter your job title.'
+      : 'Job title is too long.';
+  }
 
   const nameOk = validateField(nameInput, nameError, nameValid);
   const emailOk = validateField(emailInput, emailError, emailValid);
-  return nameOk && emailOk;
+  const jobTitleOk = validateField(jobTitleInput, jobTitleError, jobTitleValid);
+  return nameOk && emailOk && jobTitleOk;
 }
 
 /* ──────────────────────────────────────────────
@@ -917,12 +923,13 @@ async function handleSubmit(e) {
 
   const name = document.getElementById('name').value;
   const email = document.getElementById('email').value;
+  const jobTitle = document.getElementById('jobTitle').value;
 
   // Hide previous server-error banner
   const banner = document.getElementById('formErrorBanner');
   banner.classList.remove('show');
 
-  if (!validateForm(name, email)) return;
+  if (!validateForm(name, email, jobTitle)) return;
 
   // Loading state
   const submitBtn = document.getElementById('submitBtn');
@@ -932,18 +939,24 @@ async function handleSubmit(e) {
   submitLabel.textContent = 'Sending…';
 
   /* Always save to localStorage as a safety net so the visitor reaches
-     the download even if Formspree isn't set up yet or hits an error. */
-  saveLeadLocally(id, name, email, resource.title);
+     the download even if the Apps Script isn't reachable or hits an error. */
+  saveLeadLocally(id, name, email, jobTitle, resource.title);
 
   let serverOk = false;
   try {
-    if (FORMSPREE_ENDPOINT && !FORMSPREE_ENDPOINT.includes('REPLACE_WITH_YOUR_FORM_ID')) {
-      const res = await fetch(FORMSPREE_ENDPOINT, {
+    if (APPS_SCRIPT_ENDPOINT && APPS_SCRIPT_ENDPOINT.includes('script.google.com')) {
+      /* Note on Content-Type:
+         We send the body as JSON text but declare it as 'text/plain' to
+         avoid the browser sending a CORS preflight (OPTIONS) request that
+         Apps Script doesn't reliably answer. The Apps Script reads the
+         body via e.postData.contents and JSON.parse()s it server-side. */
+      const res = await fetch(APPS_SCRIPT_ENDPOINT, {
         method: 'POST',
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
           name: name.trim(),
           email: email.trim(),
+          job_title: jobTitle.trim(),
           resource: resource.title,
           resource_id: id,
           submitted_at: new Date().toISOString()
@@ -951,12 +964,12 @@ async function handleSubmit(e) {
       });
       serverOk = res.ok;
     } else {
-      // Formspree not configured — that's OK, we still have localStorage
+      // Apps Script URL not configured — that's OK, we still have localStorage
       serverOk = true;
-      console.info('Formspree endpoint not configured. Lead saved to localStorage only. Set FORMSPREE_ENDPOINT in resource.html to receive submissions.');
+      console.info('Apps Script endpoint not configured. Lead saved to localStorage only. Set APPS_SCRIPT_ENDPOINT in resource.html to receive submissions in your Google Sheet.');
     }
   } catch (err) {
-    console.warn('Formspree submission failed (visitor will still get download):', err);
+    console.warn('Apps Script submission failed (visitor will still get download):', err);
     serverOk = false;
   }
 
@@ -968,18 +981,19 @@ async function handleSubmit(e) {
   // Show success regardless of server outcome — the lead is captured locally
   showSuccess();
 
-  if (FORMSPREE_ENDPOINT && !FORMSPREE_ENDPOINT.includes('REPLACE_WITH_YOUR_FORM_ID') && !serverOk) {
+  if (APPS_SCRIPT_ENDPOINT && APPS_SCRIPT_ENDPOINT.includes('script.google.com') && !serverOk) {
     console.warn('Submission saved locally but the server did not confirm receipt.');
   }
 }
 
 /* Save lead to localStorage. Inspect via the browser console:
      console.log(JSON.parse(localStorage.getItem('lead_inbox') || '[]')) */
-function saveLeadLocally(id, name, email, title) {
+function saveLeadLocally(id, name, email, jobTitle, title) {
   try {
     localStorage.setItem(`lead_submitted__${id}`, JSON.stringify({
       name: name.trim(),
       email: email.trim(),
+      job_title: jobTitle.trim(),
       at: new Date().toISOString()
     }));
 
@@ -990,6 +1004,7 @@ function saveLeadLocally(id, name, email, title) {
       resource: title,
       name: name.trim(),
       email: email.trim(),
+      job_title: jobTitle.trim(),
       at: new Date().toISOString()
     });
     while (inbox.length > 100) inbox.shift(); // cap at 100 to avoid bloat
@@ -1013,6 +1028,7 @@ function resetToForm() {
   document.getElementById('formState').style.display = 'block';
   document.getElementById('name').value = '';
   document.getElementById('email').value = '';
+  document.getElementById('jobTitle').value = '';
   document.getElementById('name').focus();
 }
 
@@ -1069,6 +1085,12 @@ async function init() {
     if (EMAIL_RE.test(e.target.value.trim())) {
       e.target.classList.remove('invalid');
       document.getElementById('emailError').classList.remove('show');
+    }
+  });
+  document.getElementById('jobTitle').addEventListener('input', (e) => {
+    if (e.target.value.trim().length > 0) {
+      e.target.classList.remove('invalid');
+      document.getElementById('jobTitleError').classList.remove('show');
     }
   });
 }
