@@ -6,5 +6,13 @@
     "tag": "eBook",
     "link": "resource pdf/SaaS Homepage Audit.pdf",
     "price": "Free"
+  },
+  {
+    "title": "GTM G-A-M-E Canvas",
+    "hook": "How to build GTM strategy from a PMM lens",
+    "description": "A 6 step methodology to build a comprehensive GTM canvas starting from foundations to defining goals to identifying right channels. A must for $1M-$5M ARR SaaS startups.",
+    "tag": "eBook",
+    "link": "resource pdf/GTM GAME Canvas.xlsx",
+    "price": "Free"
   }
 ]
